@@ -4,6 +4,8 @@
 
 > A modern and user-friendly Markdown preview application
 
+🔗 [Live Demo](https://md-preview-tool.vercel.app/landing)
+
 [![Next.js](https://img.shields.io/badge/Next.js-15.2.2-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19-61dafb)](https://react.dev/)

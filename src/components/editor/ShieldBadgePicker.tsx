@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Search, Info, ExternalLink } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { badgeCategories } from '@/data/shieldCategories';
-import Image from 'next/image';
 
 interface ShieldBadgePickerProps {
   isOpen: boolean;
@@ -267,13 +266,13 @@ export function ShieldBadgePicker({ isOpen, onClose, onBadgeSelect, isDark = fal
                     </div>
                     
                     <div className="flex justify-center mb-2">
-                      <Image
-                        src={selectedBadge.badge.match(/\((.*?)\)/)?.[1] || ''}
-                        alt={selectedBadge.name}
-                        width={120}
-                        height={20}
-                        className="w-30 h-5"
-                      />
+                      {selectedBadge && (
+                        <img
+                          src={selectedBadge.badge.split('](')[1].slice(0, -1)}
+                          alt={`${selectedBadge.name} badge preview`}
+                          className="h-5"
+                        />
+                      )}
                     </div>
                     
                     <div className="grid grid-cols-2 gap-3">
@@ -353,12 +352,10 @@ export function ShieldBadgePicker({ isOpen, onClose, onBadgeSelect, isDark = fal
                     <div className="text-sm font-medium mb-2">
                       {badge.name}
                     </div>
-                    <Image
-                      src={badge.badge.match(/\((.*?)\)/)?.[1] || ''}
+                    <img
+                      src={badge.badge.split('](')[1].slice(0, -1)}
                       alt={`${badge.name} badge preview`}
-                      width={120}
-                      height={20}
-                      className="w-30 h-5"
+                      className="h-5"
                     />
                   </button>
                 ))}

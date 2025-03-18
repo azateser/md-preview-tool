@@ -1,0 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Tema değişim transition efekti */
+*, *::before, *::after {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, fill 0.3s ease;
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Split mode editor divider */
+.w-md-editor.split-mode .w-md-editor-preview {
+  border-left: 1px solid #e2e8f0 !important;
+}
+
+.dark .w-md-editor.split-mode .w-md-editor-preview {
+  border-left: 1px solid #1f2937 !important;
+}
+
+/* Dragging styles */
+.dragging {
+  opacity: 1 !important;
+  transform: scale(1.02) !important;
+  transition: none !important;
+  pointer-events: auto !important;
+  cursor: grabbing !important;
+  z-index: 9999 !important;
+  position: relative !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3) !important;
+  background: var(--background) !important;
+  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+[data-rbd-draggable-id] {
+  user-select: none;
+}
+
+/* Droppable area styles */
+[data-rbd-droppable-id] {
+  min-height: 5px;
+  transition: background-color 0.2s ease;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+[data-rbd-droppable-id][data-rbd-droppable-context-id]:not([data-rbd-droppable-context-id=""]) {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Draggable placeholder styles */
+[data-rbd-placeholder-context-id] {
+  opacity: 0.3;
+  background-color: rgba(59, 130, 246, 0.1);
+  border: 1px dashed rgba(59, 130, 246, 0.3);
+  border-radius: 8px;
+  margin: 2px 0;
+}
+
+/* New Tooltip Implementation */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]::before {
+  content: attr(data-tooltip) " (" attr(data-shortcut) ")";
+  position: absolute;
+  left: calc(100% + 5px);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  z-index: 999999;
+  pointer-events: none;
+  min-width: max-content;
+}
+
+[data-tooltip]:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Dark theme */
+.dark [data-tooltip]::before {
+  background-color: #1e1e1e;
+  color: #e5e7eb;
+  border: 1px solid #2e2e2e;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Light theme */
+.light [data-tooltip]::before,
+body:not(.dark) [data-tooltip]::before {
+  background-color: #18181b;
+  color: #f3f4f6;
+  border: 1px solid #27272a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.shortcut-badge {
+  margin-left: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.dark .shortcut-badge {
+  background-color: #374151;
+  color: #d1d5db;
+}
+
+.light .shortcut-badge {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}

@@ -2,7 +2,7 @@
 
 import { motion, MotionValue } from "framer-motion";
 import { useTheme } from "@/components/theme-provider";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import Link from "next/link";
 
 interface HeroSectionProps {
@@ -92,7 +92,7 @@ export function HeroSection({ scrollProgress, mouseX, mouseY, isScrolling }: Her
             transition={{ duration: 0.2 }}
           >
             <Link 
-              href="./" 
+              href="/" 
               className={`group relative px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-medium inline-flex items-center gap-2 transition-all ${
                 isDarkMode
                   ? 'bg-white text-black hover:bg-opacity-90'
@@ -114,6 +114,43 @@ export function HeroSection({ scrollProgress, mouseX, mouseY, isScrolling }: Her
               </motion.span>
             </Link>
           </motion.div>
+        </motion.div>
+      </motion.div>
+
+      <motion.div
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ 
+          opacity: 1, 
+          y: 0 
+        }}
+        transition={{ 
+          duration: 0.6,
+          delay: 1
+        }}
+      >
+        <motion.div
+          animate={{ 
+            y: [0, 10, 0],
+          }}
+          transition={{ 
+            duration: 1.5,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className={`p-2 rounded-full ${
+            isDarkMode 
+              ? 'bg-white/10 text-white hover:bg-white/20' 
+              : 'bg-black/10 text-black hover:bg-black/20'
+          } transition-colors`}
+          onClick={() => {
+            window.scrollTo({
+              top: window.innerHeight,
+              behavior: 'smooth'
+            });
+          }}
+        >
+          <ChevronDown className="w-6 h-6" />
         </motion.div>
       </motion.div>
     </section>

@@ -13,6 +13,13 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 
+## 📸 Screenshots
+
+![Screenshot 1](./readme-assets/screenshot-1.png)
+![Screenshot 2](./readme-assets/screenshot-2.png)
+![Screenshot 3](./readme-assets/screenshot-3.png)
+
+
 ## ✨ Features
 
 - 📱 Modern and responsive design

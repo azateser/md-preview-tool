@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "MD Preview - Markdown Editor",
   description: "A minimal, dark-themed markdown editor with real-time preview",
+  icons: {
+    icon: '/favicon.png',
+  },
 };
 
 export default function RootLayout({

@@ -42,6 +42,7 @@ import { ShieldBadgePicker } from './ShieldBadgePicker';
 import { TemplatePicker } from './TemplatePicker';
 import { ComponentsPicker } from './ComponentsPicker'
 import { AIModal } from './AIModal';
+import { ShareModal } from './ShareModal';
 
 const isMac = () => {
   if (typeof window !== 'undefined') {
@@ -65,6 +66,7 @@ export function MarkdownEditor({ onMenuToggle }: MarkdownEditorProps) {
   const [isTemplatePickerOpen, setIsTemplatePickerOpen] = useState(false);
   const [isComponentsPickerOpen, setIsComponentsPickerOpen] = useState(false);
   const [isAIModalOpen, setIsAIModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const activeDocument = documents.find((doc) => doc.id === activeDocumentId);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -106,8 +108,9 @@ export function MarkdownEditor({ onMenuToggle }: MarkdownEditorProps) {
   const handleSave = () => {
   };
 
-  const handleShare = () => {
-  };
+  const handleShare = useCallback(() => {
+    setIsShareModalOpen(true);
+  }, []);
 
   const handleSearch = () => {
   };
@@ -1224,6 +1227,14 @@ export function MarkdownEditor({ onMenuToggle }: MarkdownEditorProps) {
           </div>
         </div>
       </motion.div>
+
+      {isShareModalOpen && (
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          documentId={activeDocument?.id}
+        />
+      )}
     </motion.div>
   );
 } 

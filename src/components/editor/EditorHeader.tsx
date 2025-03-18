@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, ChevronDown, Clock, Search, Save, Share, MoreVertical, X } from 'lucide-react';
+import { Menu, ChevronDown, Clock, Search, Save, Share, MoreVertical, X, Star, FileDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useTheme } from '@/components/theme-provider';
@@ -39,17 +39,14 @@ export function EditorHeader({
   const isDark = theme === 'dark';
 
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node) && 
-          moreButtonRef.current && !moreButtonRef.current.contains(event.target as Node)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
-    }
-    
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
     };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   useEffect(() => {
@@ -122,8 +119,28 @@ export function EditorHeader({
     }
   };
 
+  const handleExport = () => {
+    const markdownContent = ""; // Burayı markdown içeriğiyle doldurun
+    const blob = new Blob([markdownContent], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${title || 'document'}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    setIsDropdownOpen(false);
+  };
+
   return (
-    <header className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
+    <header className={cn(
+      "flex items-center justify-between px-4 py-2",
+      "border-b",
+      isDark 
+        ? "bg-gray-950 border-gray-800"
+        : "bg-white border-gray-200"
+    )}>
       <div className="flex items-center space-x-4">
         <button
           onClick={onMenuToggle}
@@ -249,31 +266,27 @@ export function EditorHeader({
         )}
       </AnimatePresence>
 
-      <div className="flex items-center space-x-1 px-3 py-2 relative">
-        <motion.button
+      <div className="flex items-center space-x-1 px-3 py-2">
+        <button
           className={cn(
             "p-2.5 rounded-lg",
             "transition-colors duration-200",
             "hover:bg-gray-500/10 active:bg-gray-500/20",
             isSearchOpen ? (isDark ? "text-blue-400" : "text-blue-500") : (isDark ? "text-gray-300" : "text-gray-600")
           )}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
           onClick={handleSearch}
           title="Search in document"
         >
           <Search size={18} />
-        </motion.button>
+        </button>
 
-        <motion.button
+        <button
           className={cn(
             "p-2.5 rounded-lg relative",
             "transition-colors duration-200",
             "hover:bg-gray-500/10 active:bg-gray-500/20",
             isDark ? "text-gray-300" : "text-gray-600"
           )}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
           onClick={handleSave}
           title="Save document"
           disabled={isSaving}
@@ -299,44 +312,75 @@ export function EditorHeader({
               <Save size={18} />
             )}
           </AnimatePresence>
-        </motion.button>
+        </button>
 
-        <motion.button
+        <button
           className={cn(
             "p-2.5 rounded-lg",
             "transition-colors duration-200",
             "hover:bg-gray-500/10 active:bg-gray-500/20",
             isDark ? "text-gray-300" : "text-gray-600"
           )}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
           onClick={handleShare}
           title="Share document"
         >
           <Share size={18} />
-        </motion.button>
+        </button>
 
-        <div className={cn(
-          "w-px h-5 mx-2",
-          isDark ? "bg-gray-800" : "bg-gray-200"
-        )} />
+        <div className="relative" ref={dropdownRef}>
+          <button
+            ref={moreButtonRef}
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className={cn(
+              "p-2.5 rounded-lg",
+              "transition-colors duration-200",
+              "hover:bg-gray-500/10 active:bg-gray-500/20",
+              isDark ? "text-gray-300" : "text-gray-600"
+            )}
+          >
+            <MoreVertical size={18} />
+          </button>
 
-        <motion.button
-          ref={moreButtonRef}
-          className={cn(
-            "p-2.5 rounded-lg",
-            "transition-colors duration-200",
-            "hover:bg-gray-500/10 active:bg-gray-500/20",
-            isDropdownOpen ? (isDark ? "bg-gray-800" : "bg-gray-100") : "",
-            isDark ? "text-gray-300" : "text-gray-600"
+          {isDropdownOpen && (
+            <div className={cn(
+              "absolute right-0 mt-1 w-48 rounded-lg shadow-lg",
+              "py-1 z-50",
+              isDark ? "bg-gray-800 border border-gray-700" : "bg-white border border-gray-200"
+            )}>
+              <button
+                onClick={handleExport}
+                className={cn(
+                  "w-full px-4 py-2 text-left text-sm",
+                  "transition-colors duration-150",
+                  "flex items-center space-x-2",
+                  isDark 
+                    ? "text-gray-300 hover:bg-gray-700" 
+                    : "text-gray-700 hover:bg-gray-100"
+                )}
+              >
+                <FileDown className="w-4 h-4" />
+                <span>Export as Markdown</span>
+              </button>
+              <button
+                onClick={() => {
+                  // Add to favorites logic
+                  setIsDropdownOpen(false);
+                }}
+                className={cn(
+                  "w-full px-4 py-2 text-left text-sm",
+                  "transition-colors duration-150",
+                  "flex items-center space-x-2",
+                  isDark 
+                    ? "text-gray-300 hover:bg-gray-700" 
+                    : "text-gray-700 hover:bg-gray-100"
+                )}
+              >
+                <Star className="w-4 h-4" />
+                <span>Add to Favorites</span>
+              </button>
+            </div>
           )}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          title="More options"
-        >
-          <MoreVertical size={18} />
-        </motion.button>
+        </div>
       </div>
     </header>
   );

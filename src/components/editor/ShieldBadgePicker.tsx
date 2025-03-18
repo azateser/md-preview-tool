@@ -268,63 +268,83 @@ export function ShieldBadgePicker({ isOpen, onClose, onBadgeSelect, isDark = fal
                     <div className="flex justify-center mb-2">
                       {selectedBadge && (
                         <img
-                          src={selectedBadge.badge.split('](')[1].slice(0, -1)}
+                          src={
+                            selectedBadge.badge
+                              .split('](')[1]
+                              .slice(0, -1)
+                              .replace(/badge\/([^-]*)-(.*?)\?/, `badge/${customLabel || selectedBadge.name}-${customColor || '339933'}?`)
+                          }
                           alt={`${selectedBadge.name} badge preview`}
                           className="h-5"
                         />
                       )}
                     </div>
-                    
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
+
+                    <div className="flex gap-2">
+                      <div className="flex-1">
                         <label className={cn(
-                          "block text-xs font-medium mb-1.5",
-                          isDark ? "text-gray-300" : "text-gray-700"
+                          "block text-xs font-medium mb-1",
+                          isDark ? "text-gray-300" : "text-gray-600"
                         )}>
                           Label
                         </label>
-                        <input 
+                        <input
                           type="text"
                           value={customLabel}
                           onChange={(e) => setCustomLabel(e.target.value)}
-                          placeholder="my-badge"
                           className={cn(
-                            "w-full px-3 py-1.5 text-sm rounded-md",
-                            isDark 
-                              ? "bg-gray-900 border border-gray-700 text-gray-200" 
-                              : "bg-white border border-gray-300 text-gray-800"
+                            "w-full px-2 py-1 text-sm rounded",
+                            "border outline-none transition-colors",
+                            isDark
+                              ? "bg-gray-900 border-gray-700 text-gray-100 focus:border-blue-500"
+                              : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
                           )}
                         />
                       </div>
-                      <div>
+                      <div className="flex-1">
                         <label className={cn(
-                          "block text-xs font-medium mb-1.5",
-                          isDark ? "text-gray-300" : "text-gray-700"
+                          "block text-xs font-medium mb-1",
+                          isDark ? "text-gray-300" : "text-gray-600"
                         )}>
-                          Color
+                          Color (hex or name)
                         </label>
-                        <input 
-                          type="text"
-                          value={customColor}
-                          onChange={(e) => setCustomColor(e.target.value)}
-                          placeholder="blue or 4285F4"
-                          className={cn(
-                            "w-full px-3 py-1.5 text-sm rounded-md",
-                            isDark 
-                              ? "bg-gray-900 border border-gray-700 text-gray-200" 
-                              : "bg-white border border-gray-300 text-gray-800"
-                          )}
-                        />
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={customColor}
+                            onChange={(e) => setCustomColor(e.target.value)}
+                            className={cn(
+                              "flex-1 px-2 py-1 text-sm rounded",
+                              "border outline-none transition-colors",
+                              isDark
+                                ? "bg-gray-900 border-gray-700 text-gray-100 focus:border-blue-500"
+                                : "bg-white border-gray-300 text-gray-900 focus:border-blue-500"
+                            )}
+                          />
+                          <input
+                            type="color"
+                            value={`#${customColor.replace(/[^0-9a-fA-F]/g, '')}`}
+                            onChange={(e) => setCustomColor(e.target.value.replace('#', ''))}
+                            className={cn(
+                              "w-8 h-8 rounded cursor-pointer",
+                              "border transition-colors",
+                              isDark
+                                ? "border-gray-700 bg-gray-900"
+                                : "border-gray-300 bg-white"
+                            )}
+                          />
+                        </div>
                       </div>
                     </div>
-                    
+
                     <button
                       onClick={applyCustomBadge}
                       className={cn(
-                        "mt-1 w-full py-1.5 rounded-md text-sm font-medium",
+                        "w-full py-1.5 rounded text-sm font-medium",
+                        "transition-colors",
                         isDark
-                          ? "bg-blue-600 text-white hover:bg-blue-700"
-                          : "bg-blue-600 text-white hover:bg-blue-700"
+                          ? "bg-blue-600 hover:bg-blue-700 text-white"
+                          : "bg-blue-600 hover:bg-blue-700 text-white"
                       )}
                     >
                       Apply Changes
@@ -334,36 +354,37 @@ export function ShieldBadgePicker({ isOpen, onClose, onBadgeSelect, isDark = fal
               )}
             </AnimatePresence>
 
-            <div className="p-4 overflow-y-auto max-h-[400px]">
-              <div className="grid grid-cols-2 gap-3">
-                {filteredBadges.map((badge, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleBadgeClick(badge)}
-                    className={cn(
-                      "p-3 rounded-lg text-left",
-                      "transition-all hover:scale-[1.02] transform duration-100",
-                      isDark
-                        ? "bg-gray-800/50 hover:bg-gray-800"
-                        : "bg-gray-50 hover:bg-gray-100",
-                      "group"
-                    )}
-                  >
-                    <div className="text-sm font-medium mb-2">
-                      {badge.name}
-                    </div>
-                    <img
-                      src={badge.badge.split('](')[1].slice(0, -1)}
-                      alt={`${badge.name} badge preview`}
-                      className="h-5"
-                    />
-                  </button>
-                ))}
-              </div>
+            <div className={cn(
+              "flex-1 overflow-y-auto p-4",
+              "grid grid-cols-2 gap-2 content-start"
+            )}>
+              {filteredBadges.map((badge, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleBadgeClick(badge)}
+                  className={cn(
+                    "p-3 rounded-lg text-left",
+                    "transition-all hover:scale-[1.02] transform duration-100",
+                    isDark
+                      ? "bg-gray-800/50 hover:bg-gray-800"
+                      : "bg-gray-50 hover:bg-gray-100",
+                    "group"
+                  )}
+                >
+                  <div className="text-sm font-medium mb-2">
+                    {badge.name}
+                  </div>
+                  <img
+                    src={badge.badge.split('](')[1].slice(0, -1)}
+                    alt={`${badge.name} badge preview`}
+                    className="h-5"
+                  />
+                </button>
+              ))}
             </div>
           </motion.div>
         </div>
       )}
     </AnimatePresence>
   );
-} 
+}

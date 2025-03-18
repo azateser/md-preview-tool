@@ -1,6 +1,6 @@
 ![Demo](./readme-assets/banner-image.png)
 
-# 📝 MD-Prew
+# 📝 MD-Preview-Tool
 
 > A modern and user-friendly Markdown preview application
 
@@ -59,7 +59,7 @@
 git clone https://github.com/azateser/md-preview-tool.git
 
 # Navigate to the project directory
-cd md-prew
+cd md-preview-tool
 
 # Install dependencies
 npm install
